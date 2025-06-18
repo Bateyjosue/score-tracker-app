@@ -1,6 +1,5 @@
-import React from 'react';
 import { motion } from 'framer-motion';
-import { Zap, Users, Target } from 'lucide-react';
+import { Zap, Target } from 'lucide-react';
 import { useGameState } from './hooks/useGameState';
 import Leaderboard from './components/Leaderboard';
 import ScoringPanel from './components/ScoringPanel';

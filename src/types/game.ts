@@ -9,7 +9,7 @@ export interface Team {
 
 export interface Question {
   id: string;
-  round: 'rubric' | 'final';
+  round?: "rubric" | "final";
   points: number;
   winner?: string;
   timestamp: number;
@@ -17,7 +17,7 @@ export interface Question {
 
 export interface GameState {
   teams: Team[];
-  currentRound: 'rubric' | 'final' | 'finished';
+  currentRound: "rubric" | "final" | "finished";
   questions: Question[];
   selectedPoints: number;
   timer: number;
