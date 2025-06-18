@@ -8,26 +8,28 @@ interface LeaderboardProps {
   currentRound: 'rubric' | 'final' | 'finished';
   onTeamClick?: (teamId: string) => void;
   disabledTeamIds?: string[];
+  selectedPoints?: number;
 }
 
 const Leaderboard: React.FC<LeaderboardProps> = ({ 
   teams, 
   currentRound, 
   onTeamClick,
-  disabledTeamIds = []
+  disabledTeamIds = [],
+  selectedPoints = 0
 }) => {
   const sortedTeams = [...teams].sort((a, b) => b.score - a.score);
   const finalsTeams = currentRound === 'final' ? sortedTeams.slice(0, 4) : [];
   const displayTeams = currentRound === 'final' ? finalsTeams : sortedTeams;
 
   return (
-    <div className="space-y-4 lg:space-y-6">
+    <div className="space-y-4">
       {/* Round indicator */}
       <div className="text-center">
         <motion.h2 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-2xl md:text-3xl font-bold text-white mb-2"
+          className="text-xl md:text-2xl lg:text-3xl font-bold text-white mb-2"
         >
           {currentRound === 'rubric' && 'Round 1: Kahoot Rubric'}
           {currentRound === 'final' && '🔥 FINALS: Top 4 Teams'}
@@ -35,22 +37,22 @@ const Leaderboard: React.FC<LeaderboardProps> = ({
         </motion.h2>
         
         {currentRound === 'rubric' && (
-          <p className="text-gray-300 text-sm md:text-base">
+          <p className="text-gray-300 text-xs md:text-sm">
             All teams competing • Top 4 advance to finals
           </p>
         )}
         {currentRound === 'final' && (
-          <p className="text-yellow-400 font-medium text-sm md:text-base">
+          <p className="text-yellow-400 font-medium text-xs md:text-sm">
             General Knowledge Round • Winner takes all!
           </p>
         )}
       </div>
 
-      {/* Teams grid - Optimized for mobile */}
-      <div className={`grid gap-3 md:gap-4 ${
+      {/* Teams grid - Mobile optimized */}
+      <div className={`grid gap-3 ${
         currentRound === 'final' 
-          ? 'grid-cols-2 lg:grid-cols-4' 
-          : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'
+          ? 'grid-cols-2 md:grid-cols-4' 
+          : 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'
       }`}>
         <AnimatePresence mode="popLayout">
           {displayTeams.map((team, index) => (
@@ -72,28 +74,29 @@ const Leaderboard: React.FC<LeaderboardProps> = ({
                 isInFinals={currentRound === 'final'}
                 onClick={onTeamClick ? () => onTeamClick(team.id) : undefined}
                 disabled={disabledTeamIds.includes(team.id)}
+                selectedPoints={selectedPoints}
               />
             </motion.div>
           ))}
         </AnimatePresence>
       </div>
 
-      {/* Finals qualification indicator - Compact on mobile */}
+      {/* Finals qualification indicator - Mobile optimized */}
       {currentRound === 'rubric' && sortedTeams.some(team => team.score > 0) && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-gradient-to-r from-yellow-400/10 to-orange-500/10 rounded-xl lg:rounded-2xl p-4 lg:p-6 border border-yellow-400/20"
+          className="bg-gradient-to-r from-yellow-400/10 to-orange-500/10 rounded-xl p-4 border border-yellow-400/20"
         >
-          <h3 className="text-lg lg:text-xl font-bold text-yellow-400 mb-3">
+          <h3 className="text-base md:text-lg font-bold text-yellow-400 mb-3">
             🏆 Current Finals Qualifiers (Top 4)
           </h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 lg:gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {sortedTeams.slice(0, 4).map((team, index) => (
               <div key={team.id} className="text-center">
-                <div className="text-xl lg:text-2xl mb-1">{team.emoji}</div>
-                <div className="text-xs lg:text-sm text-white font-medium truncate">{team.name}</div>
-                <div className="text-yellow-400 font-bold text-sm lg:text-base">{team.score} pts</div>
+                <div className="text-lg md:text-xl mb-1">{team.emoji}</div>
+                <div className="text-xs text-white font-medium truncate">{team.name}</div>
+                <div className="text-yellow-400 font-bold text-sm">{team.score} pts</div>
               </div>
             ))}
           </div>
